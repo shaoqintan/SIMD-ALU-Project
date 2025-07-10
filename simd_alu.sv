@@ -13,13 +13,13 @@ module simd_lane #(
         input clk, 
         input reset, 
         input logic mark_ready_valid, 
-        input logic[RS_SIZE-1:0] mark_ready_idx, 
+        input logic[1:0] mark_ready_idx, 
         input instr_valid, 
         input logic[7:0] A, 
         input logic[7:0] B, 
         input logic[2:0] opcode, 
         output logic[8:0] result,
-        output logic [RS_SIZE-1:0] tail_ptr_out
+        output logic [1:0] tail_ptr_out
     );
 
     RS_Entry rs[RS_SIZE];
@@ -80,14 +80,14 @@ module simd_unit #(
         input logic clk, 
         input logic reset, 
         input logic mark_ready_valid[lanes], 
-        input logic[RS_SIZE-1:0] mark_ready_idx [lanes], 
+        input logic[1:0] mark_ready_idx [lanes], 
         input logic instr_valid, 
         input logic[7:0] A, 
         input logic[7:0] B, 
         input logic[2:0] opcode, 
         output logic[8:0] result[lanes], 
         output logic [lanes-1:0] issued_lane,
-        output logic [RS_SIZE-1:0] issued_rs_index
+        output logic [1:0] issued_rs_index
     );
     genvar i;
     logic[1:0] rr_sequence;
@@ -105,7 +105,7 @@ module simd_unit #(
             lane_instr_valid[rr_sequence] = 1;
         end
     end
-    logic [RS_SIZE-1:0] tail_ptr_out[lanes];
+    logic [1:0] tail_ptr_out[lanes];
     assign issued_lane = rr_sequence;
     assign issued_rs_index = tail_ptr_out[rr_sequence];
     generate
